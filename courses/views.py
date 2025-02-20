@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import (
     PermissionRequiredMixin,
 )
 from django.forms.models import modelform_factory
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views.generic.base import TemplateResponseMixin, View
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
@@ -15,6 +15,10 @@ from .models import Content, Course, Module
 
 from braces.views import CsrfExemptMixin, JSONRequestResponseMixin
 
+from .models import Subject
+from django.db.models import Count
+
+from django.views.generic.detail import DetailView
 
 class OwnerMixin:
     def get_queryset(self):
@@ -176,3 +180,30 @@ class ContentOrderViews(CsrfExemptMixin, JSONRequestResponseMixin, View):
         return self.render_json_response(
             {'saved':'ok'}
         )
+
+class CourseListViews(TemplateResponseMixin, View):
+    model = Course
+    template_name = 'courses/course/list.html'
+    def get(self, request, subject=None):
+        subjects = Subject.objects.annotate(
+            total_courses=Count('courses')
+        )
+        courses = Course.objects.annotate(
+            total_modules=Count('modules')
+        )
+        if subject:
+            subject = get_object_or_404(Subject, slug=subject)
+            courses = Course.objects.filter(
+                subject=subject
+            )
+        return self.render_to_response(
+            {
+                'subjects': subjects,
+                'courses': courses,
+                'subject': subject,
+            }
+        )
+
+class CourseDetailViews(DetailView):
+    model = Course
+    template_name = 'courses/course/detail.html'
