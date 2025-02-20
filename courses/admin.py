@@ -1,5 +1,10 @@
 from django.contrib import admin
 from courses.models import Subject, Course, Module
+from courses.models import Module
+
+@admin.register(Module)
+class ModuleAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title')
 
 @admin.register(Subject)
 class SubjectAdmin(admin.ModelAdmin):
