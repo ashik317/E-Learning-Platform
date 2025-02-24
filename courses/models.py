@@ -4,6 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from .fields import OrderField
 
+from django.template.loader import render_to_string
 
 class Subject(models.Model):
     title = models.CharField(max_length=200)
@@ -27,6 +28,7 @@ class Course(models.Model):
         related_name='courses',
         on_delete=models.CASCADE
     )
+    students = models.ManyToManyField(User, blank=True, related_name='courses_joined')
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, unique=True)
     overview = models.TextField()
@@ -91,6 +93,13 @@ class ItemBase(models.Model):
     def __str__(self):
         return self.title
 
+    def render(self):
+        return render_to_string(
+            f'courses/content/{self._meta.model_name}.html',
+            {'item': self}
+        )
+
+
 
 class Text(ItemBase):
     content = models.TextField()
@@ -106,3 +115,4 @@ class Image(ItemBase):
 
 class Video(ItemBase):
     url = models.URLField()
+

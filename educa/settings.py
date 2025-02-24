@@ -3,7 +3,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -14,7 +13,6 @@ SECRET_KEY = 'django-insecure-ma6nf1gqr-xe$dq*etok%-(0z^x&%$yf6qi+gcz&hppbr^+9ql
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -27,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'courses.apps.CoursesConfig',
     'students.apps.StudentsConfig',
+    'embed_video',
 ]
 
 MIDDLEWARE = [
@@ -60,7 +59,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'educa.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
@@ -70,7 +68,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -90,7 +87,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
@@ -101,7 +97,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
@@ -122,6 +117,10 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #Redirect
-# LOGIN_REDIRECT_URL = '/courses/mine/'
+# LOGIN_REDIRECT_URL = "/courses/mine/"
 # LOGOUT_REDIRECT_URL = '/'
-LOGIN_REDIRECT_URL = "/courses/mine/"
+
+from django.urls import reverse_lazy
+LOGIN_REDIRECT_URL = reverse_lazy('student_course_list')
+#LOGOUT_REDIRECT_URL = '/'
+

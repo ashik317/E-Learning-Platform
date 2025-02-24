@@ -13,6 +13,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('course/',include('courses.urls')),
     path('', CourseListViews.as_view(), name='course-list'),
+    path('students/', include('students.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
